@@ -1,93 +1,104 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
-      </div>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>
-            Vuetify is a progressive Material Design component framework for
-            Vue.js. It was designed to empower developers to create amazing
-            applications.
-          </p>
-          <p>
-            For more information on Vuetify, check out the
-            <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              documentation </a
-            >.
-          </p>
-          <p>
-            If you have questions, please join the official
-            <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="chat"
-            >
-              discord </a
-            >.
-          </p>
-          <p>
-            Find a bug? Report it on the github
-            <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board </a
-            >.
-          </p>
-          <p>
-            Thank you for developing with Vuetify and I look forward to bringing
-            more exciting features in the future.
-          </p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3" />
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt Documentation
-          </a>
-          <br />
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" nuxt to="/inspire"> Continue </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
+  <v-app>
+    <v-system-bar app status color="indigo lighten-1" height="20">
+      <strong> Status Bar </strong>
+      <v-spacer />
+      <v-icon>mdi-account</v-icon>
+      <v-icon>mdi-cloud-check</v-icon>
+      <v-icon>mdi-wifi-strength-4</v-icon>
+    </v-system-bar>
+
+    <v-app-bar app color="black">
+      <v-btn icon @click="drawer = !drawer">
+        <v-icon large>mdi-menu</v-icon>
+      </v-btn>
+      <v-spacer></v-spacer>
+      <v-icon large color="primary">Pictor</v-icon>
+      <v-spacer></v-spacer>
+      <v-avatar size="46" color="grey">
+        <img src="../static/v.png" alt="alt" />
+      </v-avatar>
+    </v-app-bar>
+
+    <v-navigation-drawer v-model="drawer" app>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="title">Hi {{ username }}</v-list-item-title>
+          <v-list-item-subtitle> Where to go? </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider />
+
+      <v-list dense nav>
+        <v-list-item link>
+          <v-list-item-icon><v-icon>mdi-arrow-right</v-icon></v-list-item-icon>
+          <v-list-item-content>New Canvas</v-list-item-content>
+        </v-list-item>
+        <v-list-item link>
+          <v-list-item-icon><v-icon>mdi-arrow-right</v-icon></v-list-item-icon>
+          <v-list-item-content>Saved Drawings</v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+      <v-divider />
+
+      <v-container>
+        <v-btn v-for="ic in f_ics" :key="ic" icon>
+          <v-icon>{{ ic }}</v-icon>
+        </v-btn>
+      </v-container>
+
+      <v-divider />
+
+      <v-btn
+        v-if="!alert_welcome"
+        color="black"
+        transition="slide-y-reverse-transition"
+        @click="alert_welcome = true"
+        >Welcome</v-btn
+      >
+      <v-alert
+        v-model="alert_welcome"
+        color="primary"
+        dismissible
+        max-width="600"
+        icon="mdi-emoticon-happy"
+        transition="slide-y-transition"
+      >
+        You are welcome!
+      </v-alert>
+
+      <v-divider />
+
+      <v-chip class="ma-4"> PICTOR - {{ new Date().getFullYear() }} </v-chip>
+    </v-navigation-drawer>
+
+    <v-main class="blue-grey">
+      <v-container>
+        <canvas id="canvas" width="200" height="200"></canvas>
+      </v-container>
+    </v-main>
+
+    <v-bottom-navigation class="black" app>
+      <v-btn color="blue-grey">Control button</v-btn>
+    </v-bottom-navigation>
+  </v-app>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
+/* eslint-disable no-console */
 
 export default {
-  components: {
-    Logo,
-    VuetifyLogo,
+  data() {
+    return {
+      alert_welcome: false,
+      drawer: false,
+      username: 'Nandeesh',
+      f_ics: ['mdi-twitter', 'mdi-instagram', 'mdi-facebook', 'mdi-youtube'],
+    }
   },
 }
 </script>
+
+<style></style>
