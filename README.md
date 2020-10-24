@@ -1,4 +1,11 @@
-# picture_editor
+# PICTOR - your picture editor
+
+WORK IN PROGRESS
+A basic picture editor using fabric.js and nuxt.js
+
+## Todos
+
+1. Todos in latest commit message. Transfer them here.
 
 ## Build Setup
 
