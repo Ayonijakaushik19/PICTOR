@@ -85,6 +85,7 @@
           <v-row>
             <v-col :cols="cols_val" :sm="sm_val" :md="md_val" :lg="lg_val">
               <v-text-field
+                v-model="username"
                 label="Username"
                 rounded
                 outlined
@@ -102,11 +103,20 @@
             </v-col>
             <v-col :cols="cols_val" :sm="sm_val" :md="md_val" :lg="lg_val">
               <v-text-field
+                v-model="password"
                 label="Password"
                 type="password"
                 :rules="[rules.required, rules.length]"
                 rounded
                 outlined
+              ></v-text-field>
+            </v-col>
+            <v-col :cols="cols_val" :sm="sm_val" :md="md_val" :lg="lg_val">
+              <v-text-field
+                v-model="email"
+                label="NXTIVE email rule"
+                type="email"
+                :rules="emailRules"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -134,12 +144,21 @@ export default {
     return {
       alert_welcome: false,
       drawer: false,
-      username: 'Nandeesh',
+      username: '',
+      email: '',
+      password: '',
       f_ics: ['mdi-twitter', 'mdi-instagram', 'mdi-facebook', 'mdi-youtube'],
       cols_val: 12,
       sm_val: 6,
       md_val: 4,
       lg_val: 3,
+      emailRules: [
+        (v) => !!v || 'Email is required',
+        (v) =>
+          !!v.match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          ) || 'Invalid Email address',
+      ],
       rules: {
         required: (value) => !!value || 'Required',
         email: (value) => {
