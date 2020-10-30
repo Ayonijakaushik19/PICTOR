@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <!--
     <v-system-bar app status color="indigo lighten-1" height="20">
       <strong> Status Bar </strong>
       <v-spacer />
@@ -7,6 +8,7 @@
       <v-icon>mdi-cloud-check</v-icon>
       <v-icon>mdi-wifi-strength-4</v-icon>
     </v-system-bar>
+    -->
 
     <v-app-bar app color="black">
       <v-btn icon @click="drawer = !drawer">

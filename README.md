@@ -2,6 +2,7 @@
 
 WORK IN PROGRESS
 A basic picture editor using fabric.js and nuxt.js
+Add Multiple Shapes, Change Colours, Add Images
 Using default layouts and multiple pages for registration, new canvas and saved drawings.
 Registration page implements basic input field validation rules.
 

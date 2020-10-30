@@ -14,7 +14,19 @@
     </v-container>
 
     <v-footer class="black" app height="60">
+      <span class="text-sm-h5 mb-5"> ADD - </span>
       <v-spacer />
+      <v-text-field
+        v-model="userText"
+        rounded
+        outlined
+        label="Enter text"
+        dense
+        flat
+        class="ma-0 pa-0"
+        @change="addText"
+      >
+      </v-text-field>
       <v-overflow-btn
         :items="shapes"
         label="Shape"
@@ -38,6 +50,7 @@
         prepend-icon="mdi-camera"
         hide-input
         dense
+        class="mb-6 ml-2"
         @change="addImage"
       />
       <v-spacer />
@@ -51,17 +64,18 @@ import { fabric } from 'fabric'
 export default {
   data() {
     return {
+      userText: '',
       userImage: {},
       maxWidth: 640,
       maxHeight: 480,
       justify: ['start', 'center', 'end', 'space-around', 'space-between'],
       canvas: {},
       shapes: [
-        { text: 'Add Rectangle', callback: () => this.addShape('rectangle') },
-        { text: 'Add Circle', callback: () => this.addShape('circle') },
-        { text: 'Add Ellipse', callback: () => this.addShape('ellipse') },
-        { text: 'Add Triangle', callback: () => this.addShape('triangle') },
-        { text: 'Add Line', callback: () => this.addShape('line') },
+        { text: 'Rectangle', callback: () => this.addShape('rectangle') },
+        { text: 'Circle', callback: () => this.addShape('circle') },
+        { text: 'Ellipse', callback: () => this.addShape('ellipse') },
+        { text: 'Triangle', callback: () => this.addShape('triangle') },
+        { text: 'Line', callback: () => this.addShape('line') },
       ],
       colors: [
         {
@@ -88,6 +102,14 @@ export default {
     this.canvas = new fabric.Canvas('canvas')
   },
   methods: {
+    addText() {
+      const text = new fabric.Text(this.userText, {
+        left: 20,
+        right: 20,
+        fontFamily: 'Hoefler Text',
+      })
+      this.canvas.add(text)
+    },
     addImage() {
       const reader = new FileReader()
       const mycanvas = this.canvas
@@ -99,6 +121,8 @@ export default {
           const oImg = img.set({
             left: 10,
             top: 10,
+            scaleX: 0.35,
+            scaleY: 0.35,
           })
           mycanvas.add(oImg)
         })
@@ -113,6 +137,10 @@ export default {
           top: 20,
           left: 30,
           fill: this.selectedColor,
+        })
+        const myhandler = this.rectSelected
+        shape.on('selected', function () {
+          myhandler(shape)
         })
       } else if (val === 'circle') {
         shape = new fabric.Circle({
@@ -144,6 +172,10 @@ export default {
         })
       }
       this.canvas.add(shape)
+    },
+    rectSelected(obj) {
+      // make rect editing list visible here
+      console.log('Rectangle selected at', obj.left)
     },
   },
 }
