@@ -12,6 +12,9 @@ Registration page implements basic input field validation rules.
 2. Refine Vuetify element's functioning. Make sure to add all the elements mentioned in whatsapp thread.
 3. Add vuex store
 
+![Drawing SS](https://github.com/NandeeshG/PICTOR/blob/main/screenshots/ss_draw.png?raw=true)
+![Registration SS](https://github.com/NandeeshG/PICTOR/blob/main/screenshots/ss_reg.png?raw=true)
+
 ## Build Setup
 
 ```bash
