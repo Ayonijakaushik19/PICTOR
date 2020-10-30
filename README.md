@@ -2,10 +2,13 @@
 
 WORK IN PROGRESS
 A basic picture editor using fabric.js and nuxt.js
+Using default layouts and multiple pages for registration, new canvas and saved drawings.
+Registration page implements basic input field validation rules.
 
 ## Todos
 
-1. Todos in latest commit message. Transfer them here.
+1. Add canvas and fabric control buttons. 
+2. Refine Vuetify element's functioning. Make sure to add all the elements mentioned in whatsapp thread.
 
 ## Build Setup
 
