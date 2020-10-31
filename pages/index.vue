@@ -2,13 +2,108 @@
   <v-app class="white">
     <v-container>
       <v-row justify="center">
-        <v-col sm="9">
+        <v-col cols="10">
           <canvas
             id="canvas"
             :width="maxWidth"
             :height="maxHeight"
             style="border: 1px solid black"
           ></canvas>
+        </v-col>
+        <v-col cols="2">
+          <v-row>
+            <v-slider
+              v-model="selection.angle"
+              track-color="grey"
+              label="Angle"
+              light
+              color="black"
+              :disabled="selection.disableControls"
+              thumb-label
+              :max="360"
+              @mouseup="objEdited"
+            ></v-slider>
+          </v-row>
+          <v-row>
+            <v-slider
+              v-model="selection.bWidth"
+              track-color="grey"
+              label="Border"
+              light
+              color="black"
+              :disabled="selection.disableControls"
+              thumb-label
+              :max="10"
+              :min="0"
+              :step="1"
+              @mouseup="objEdited"
+            ></v-slider>
+          </v-row>
+          <v-row>
+            <v-overflow-btn
+              v-model="selection.colorIn"
+              :items="selection.colorInOptions"
+              label="Color In?"
+              dense
+              light
+              :disabled="selection.disableControls"
+            >
+            </v-overflow-btn>
+          </v-row>
+          <v-row>
+            <v-slider
+              v-model="selection.colorR"
+              track-color="grey"
+              label="Red"
+              light
+              :max="255"
+              color="red"
+              :disabled="selection.disableControls"
+              thumb-label
+              @mouseup="objEdited"
+            ></v-slider>
+          </v-row>
+          <v-row>
+            <v-slider
+              v-model="selection.colorG"
+              track-color="grey"
+              label="Green"
+              light
+              :max="255"
+              color="green"
+              :disabled="selection.disableControls"
+              thumb-label
+              @mouseup="objEdited"
+            ></v-slider>
+          </v-row>
+          <v-row>
+            <v-slider
+              v-model="selection.colorB"
+              track-color="grey"
+              label="Blue"
+              light
+              :max="255"
+              color="blue"
+              :disabled="selection.disableControls"
+              thumb-label
+              @mouseup="objEdited"
+            ></v-slider>
+          </v-row>
+          <v-row>
+            <v-slider
+              v-model="selection.opacity"
+              track-color="grey"
+              label="Opacity"
+              light
+              color="black"
+              :disabled="selection.disableControls"
+              thumb-label
+              :min="0.0"
+              :max="1.0"
+              :step="0.1"
+              @mouseup="objEdited"
+            ></v-slider>
+          </v-row>
         </v-col>
       </v-row>
     </v-container>
@@ -96,6 +191,18 @@ export default {
         },
       ],
       selectedColor: 'black',
+      selection: {
+        angle: '',
+        bWidth: '',
+        colorIn: 'Fill',
+        colorInOptions: ['Fill', 'Border'],
+        colorR: '',
+        colorG: '',
+        colorB: '',
+        opacity: '',
+        disableControls: true,
+        selectedObj: {},
+      },
     }
   },
   mounted() {
@@ -108,12 +215,20 @@ export default {
         right: 20,
         fontFamily: 'Hoefler Text',
       })
+      const myhandler = this.objSelected
+      text.on('selected', function () {
+        myhandler(true, text)
+      })
+      text.on('deselected', function () {
+        myhandler(false, text)
+      })
       this.canvas.add(text)
     },
     addImage() {
       const reader = new FileReader()
       const mycanvas = this.canvas
       reader.readAsDataURL(this.userImage)
+      const myhandler = this.objSelected
       reader.onload = function (f) {
         const data = f.target.result
         // eslint-disable-next-line new-cap
@@ -123,6 +238,12 @@ export default {
             top: 10,
             scaleX: 0.35,
             scaleY: 0.35,
+          })
+          oImg.on('selected', function () {
+            myhandler(true, oImg)
+          })
+          oImg.on('deselected', function () {
+            myhandler(false, oImg)
           })
           mycanvas.add(oImg)
         })
@@ -137,10 +258,6 @@ export default {
           top: 20,
           left: 30,
           fill: this.selectedColor,
-        })
-        const myhandler = this.rectSelected
-        shape.on('selected', function () {
-          myhandler(shape)
         })
       } else if (val === 'circle') {
         shape = new fabric.Circle({
@@ -171,12 +288,54 @@ export default {
           strokeWidth: 10,
         })
       }
+      const myhandler = this.objSelected
+      shape.on('selected', function () {
+        myhandler(true, shape)
+      })
+      shape.on('deselected', function () {
+        myhandler(false, shape)
+      })
       this.canvas.add(shape)
     },
-    rectSelected(obj) {
-      // make rect editing list visible here
-      console.log('Rectangle selected at', obj.left)
+    objSelected(selectedNow, obj) {
+      if (selectedNow === false) {
+        this.selection.disableControls = true
+        this.selection.selectedObj = {}
+        this.selection.angle = 0
+        this.selection.bWidth = 0
+        this.selection.opacity = 0
+      } else {
+        this.selection.disableControls = false
+        this.selection.selectedObj = obj
+        this.selection.angle = obj.get('angle')
+        this.selection.bWidth = obj.get('strokeWidth')
+        this.selection.opacity = obj.get('opacity')
+      }
     },
+    objEdited() {
+      if (this.selection.colorIn === 'Fill') {
+        const color = `rgb(${this.selection.colorR},${this.selection.colorG},${this.selection.colorB})`
+        this.selection.selectedObj.set({
+          fill: color,
+        })
+      } else if (this.selection.colorIn === 'Border') {
+        const color = `rgb(${this.selection.colorR},${this.selection.colorG},${this.selection.colorB})`
+        this.selection.selectedObj.set({
+          stroke: color,
+        })
+      }
+      this.selection.selectedObj.set({
+        angle: this.selection.angle,
+        opacity: this.selection.opacity,
+        strokeWidth: this.selection.bWidth,
+      })
+      this.canvas.renderAll()
+    },
+  },
+  head() {
+    return {
+      title: 'PICTOR',
+    }
   },
 }
 </script>
