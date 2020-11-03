@@ -45,6 +45,10 @@
           <v-list-item-icon><v-icon>mdi-arrow-right</v-icon></v-list-item-icon>
           <v-list-item-content>Saved Drawings</v-list-item-content>
         </v-list-item>
+        <v-list-item link to="/color">
+          <v-list-item-icon><v-icon>mdi-arrow-right</v-icon></v-list-item-icon>
+          <v-list-item-content>Color Extraction</v-list-item-content>
+        </v-list-item>
       </v-list>
 
       <v-divider />
