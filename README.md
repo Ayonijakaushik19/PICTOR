@@ -1,16 +1,26 @@
 # PICTOR - your picture editor
 
 WORK IN PROGRESS
+
 A basic picture editor using fabric.js and nuxt.js
-Add Multiple Shapes, Change Colours, Add Images
+1. Add Text, Shapes, Images
+2. Change fill colour and border Colours
+3. Adjust Transparency
+
+Also a image color extraction functionality.
+
 Using default layouts and multiple pages for registration, new canvas and saved drawings.
 Registration page implements basic input field validation rules.
 
 ## Todos
 
-1. Add canvas and fabric control buttons.
+1. Add more controls like delete, send front back, polyline.
 2. Refine Vuetify element's functioning. Make sure to add all the elements mentioned in whatsapp thread.
 3. Add vuex store
+4. Add upload image in color extraction or use saved drawings
+5. Add localstorage for current canvas
+6. Add save drawing option
+7. Make registration/login functional
 
 ![Drawing SS1](https://github.com/NandeeshG/PICTOR/blob/main/screenshots/ss_draw2.png?raw=true)
 ![Drawing SS2](https://github.com/NandeeshG/PICTOR/blob/main/screenshots/ss_draw.png?raw=true)
