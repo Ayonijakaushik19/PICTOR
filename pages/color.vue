@@ -46,7 +46,8 @@
 
 <script>
 /* eslint-disable no-console */
-import ColorThief from '../node_modules/colorthief/dist/color-thief.mjs'
+// import ColorThief from '../node_modules/colorthief/dist/color-thief.mjs'
+import ColorThief from 'colorthief'
 export default {
   data() {
     return {
