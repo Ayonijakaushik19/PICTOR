@@ -25,7 +25,9 @@
     <v-navigation-drawer v-model="drawer" app>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="title">Hi vuexUsername</v-list-item-title>
+          <v-list-item-title class="title"
+            >Hi {{ vuexUsername }}</v-list-item-title
+          >
           <v-list-item-subtitle> Where to go? </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -35,11 +37,11 @@
       <v-list dense nav>
         <v-list-item link to="/registration">
           <v-list-item-icon><v-icon>mdi-arrow-right</v-icon></v-list-item-icon>
-          <v-list-item-content>Registration</v-list-item-content>
+          <v-list-item-content>Login/Logout</v-list-item-content>
         </v-list-item>
         <v-list-item link to="/">
           <v-list-item-icon><v-icon>mdi-arrow-right</v-icon></v-list-item-icon>
-          <v-list-item-content>New Canvas</v-list-item-content>
+          <v-list-item-content>Current Drawing</v-list-item-content>
         </v-list-item>
         <v-list-item link to="/saved">
           <v-list-item-icon><v-icon>mdi-arrow-right</v-icon></v-list-item-icon>
@@ -53,35 +55,14 @@
 
       <v-divider />
 
-      <v-container>
-        <v-btn v-for="ic in f_ics" :key="ic" icon>
-          <v-icon>{{ ic }}</v-icon>
-        </v-btn>
-      </v-container>
-
-      <v-divider />
-
-      <v-btn
-        v-if="!alert_welcome"
-        color="black"
-        transition="slide-y-reverse-transition"
-        @click="alert_welcome = true"
-        >Welcome</v-btn
-      >
-      <v-alert
-        v-model="alert_welcome"
-        color="primary"
-        dismissible
-        max-width="600"
-        icon="mdi-emoticon-happy"
-        transition="slide-y-transition"
-      >
-        You are welcome!
-      </v-alert>
-
-      <v-divider />
-
-      <v-chip class="ma-4"> PICTOR - {{ new Date().getFullYear() }} </v-chip>
+      <v-footer absolute>
+        <v-container>
+          <v-btn v-for="ic in f_ics" :key="ic" icon>
+            <v-icon>{{ ic }}</v-icon>
+          </v-btn>
+        </v-container>
+        <v-chip class="ma-4"> PICTOR - {{ new Date().getFullYear() }} </v-chip>
+      </v-footer>
     </v-navigation-drawer>
 
     <v-main class="blue-grey">
@@ -94,6 +75,7 @@
 /* eslint-disable no-console */
 
 export default {
+  name: 'Default',
   data() {
     return {
       alert_welcome: false,
@@ -104,6 +86,11 @@ export default {
       md_val: 4,
       lg_val: 3,
     }
+  },
+  computed: {
+    vuexUsername() {
+      return this.$store.state.username
+    },
   },
 }
 </script>
