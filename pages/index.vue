@@ -104,6 +104,27 @@
               @mouseup="objEdited"
             ></v-slider>
           </v-row>
+          <v-row>
+            <v-btn
+              :disabled="selection.disableControls"
+              icon
+              light
+              @click="objDeleted"
+              ><v-icon>mdi-delete</v-icon></v-btn
+            >
+          </v-row>
+          <v-row>
+            <v-col cols="6">
+              <v-btn dense class="mb-5" rounded small @click="saveThisCanvas">
+                SAVE
+              </v-btn>
+            </v-col>
+            <v-col cols="6">
+              <v-btn dense class="mb-5" rounded small @click="clearThisCanvas">
+                CLEAR
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </v-container>
@@ -164,7 +185,7 @@ export default {
       maxWidth: 640,
       maxHeight: 480,
       justify: ['start', 'center', 'end', 'space-around', 'space-between'],
-      canvas: {},
+      canvas: undefined,
       shapes: [
         { text: 'Rectangle', callback: () => this.addShape('rectangle') },
         { text: 'Circle', callback: () => this.addShape('circle') },
@@ -201,26 +222,53 @@ export default {
         colorB: '',
         opacity: '',
         disableControls: true,
-        selectedObj: {},
       },
     }
   },
+  computed: {
+    loggedIn() {
+      return this.$store.state.loggedIn
+    },
+    currentCanvas() {
+      return this.$store.state.currentCanvas
+    },
+  },
   mounted() {
     this.canvas = new fabric.Canvas('canvas')
+    if (this.currentCanvas !== {}) {
+      this.canvas.loadFromJSON(this.currentCanvas)
+    }
+    this.canvas.on('mouse:move', () => {
+      this.checkSomeObjectActive()
+      this.saveCanvas()
+    })
   },
   methods: {
+    checkSomeObjectActive() {
+      let ret = false
+      if (this.canvas === undefined || this.canvas === {}) {
+        ret = false
+      } else {
+        ret = !!(this.canvas.getActiveObjects().length > 0)
+      }
+      if (ret === false) {
+        this.selection.disableControls = true
+        this.selection.angle = 0
+        this.selection.bWidth = 0
+        this.selection.opacity = 0
+      } else {
+        this.selection.disableControls = false
+        this.selection.angle = this.canvas.getActiveObject().get('angle')
+        this.selection.bWidth = this.canvas.getActiveObject().get('strokeWidth')
+        this.selection.opacity = this.canvas.getActiveObject().get('opacity')
+      }
+      return ret
+    },
     addText() {
       const text = new fabric.Text(this.userText, {
         left: 20,
         right: 20,
         fontFamily: 'Hoefler Text',
-      })
-      const myhandler = this.objSelected
-      text.on('selected', function () {
-        myhandler(true, text)
-      })
-      text.on('deselected', function () {
-        myhandler(false, text)
       })
       this.canvas.add(text)
     },
@@ -228,7 +276,6 @@ export default {
       const reader = new FileReader()
       const mycanvas = this.canvas
       reader.readAsDataURL(this.userImage)
-      const myhandler = this.objSelected
       reader.onload = function (f) {
         const data = f.target.result
         // eslint-disable-next-line new-cap
@@ -238,12 +285,6 @@ export default {
             top: 10,
             scaleX: 0.35,
             scaleY: 0.35,
-          })
-          oImg.on('selected', function () {
-            myhandler(true, oImg)
-          })
-          oImg.on('deselected', function () {
-            myhandler(false, oImg)
           })
           mycanvas.add(oImg)
         })
@@ -288,46 +329,41 @@ export default {
           strokeWidth: 10,
         })
       }
-      const myhandler = this.objSelected
-      shape.on('selected', function () {
-        myhandler(true, shape)
-      })
-      shape.on('deselected', function () {
-        myhandler(false, shape)
-      })
       this.canvas.add(shape)
     },
-    objSelected(selectedNow, obj) {
-      if (selectedNow === false) {
-        this.selection.disableControls = true
-        this.selection.selectedObj = {}
-        this.selection.angle = 0
-        this.selection.bWidth = 0
-        this.selection.opacity = 0
-      } else {
-        this.selection.disableControls = false
-        this.selection.selectedObj = obj
-        this.selection.angle = obj.get('angle')
-        this.selection.bWidth = obj.get('strokeWidth')
-        this.selection.opacity = obj.get('opacity')
-      }
+    saveCanvas() {
+      this.$store.commit('currentCanvas', this.canvas.toJSON())
+    },
+    saveThisCanvas() {
+      this.saveCanvas()
+      this.$store.commit('savedCanvas', this.canvas.toJSON())
+    },
+    clearThisCanvas() {
+      this.canvas.clear()
+    },
+    objDeleted() {
+      this.canvas.getActiveObjects().forEach((obj) => {
+        this.canvas.remove(obj)
+      })
+      this.canvas.discardActiveObject().renderAll()
     },
     objEdited() {
+      const color = `rgb(${this.selection.colorR},${this.selection.colorG},${this.selection.colorB})`
       if (this.selection.colorIn === 'Fill') {
-        const color = `rgb(${this.selection.colorR},${this.selection.colorG},${this.selection.colorB})`
-        this.selection.selectedObj.set({
-          fill: color,
+        this.canvas.getActiveObjects().forEach((obj) => {
+          obj.set({ fill: color })
         })
       } else if (this.selection.colorIn === 'Border') {
-        const color = `rgb(${this.selection.colorR},${this.selection.colorG},${this.selection.colorB})`
-        this.selection.selectedObj.set({
-          stroke: color,
+        this.canvas.getActiveObjects().forEach((obj) => {
+          obj.set({ stroke: color })
         })
       }
-      this.selection.selectedObj.set({
-        angle: this.selection.angle,
-        opacity: this.selection.opacity,
-        strokeWidth: this.selection.bWidth,
+      this.canvas.getActiveObjects().forEach((obj) => {
+        obj.set({
+          angle: this.selection.angle,
+          opacity: this.selection.opacity,
+          strokeWidth: this.selection.bWidth,
+        })
       })
       this.canvas.renderAll()
     },
