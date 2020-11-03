@@ -1,10 +1,10 @@
 <template>
   <v-app>
-    <v-form>
+    <v-form ref="form" @submit.prevent="registerUser">
       <v-container>
         <v-row>
           <v-col>
-            <h1>REGISTRATION</h1>
+            <h1>USER VALIDATION</h1>
           </v-col>
         </v-row>
         <v-row>
@@ -37,8 +37,33 @@
             ></v-text-field>
           </v-col>
         </v-row>
+        <v-btn type="submit"> LOGIN </v-btn>
       </v-container>
+      <v-btn block :disabled="alreadyLoggedIn" class="mt-6" @click="logoutUser">
+        LOGOUT
+      </v-btn>
     </v-form>
+    <v-footer app>
+      <h3 class="red--text">P.S. - Actual API auth will be added later.</h3>
+    </v-footer>
+    <v-snackbar
+      v-model="registrationSuccess"
+      top
+      transition="slide-y-transition"
+      timeout="1000"
+      color="green"
+    >
+      Success!
+    </v-snackbar>
+    <v-snackbar
+      v-model="registrationFailure"
+      top
+      transition="slide-y-transition"
+      timeout="1000"
+      color="red"
+    >
+      Some error occured...
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -55,6 +80,8 @@ export default {
       username: '',
       email: '',
       password: '',
+      registrationSuccess: false,
+      registrationFailure: false,
       rules: {
         required: (value) => !!value || 'Required',
         email: (value) => {
@@ -72,6 +99,46 @@ export default {
         },
       },
     }
+  },
+  computed: {
+    vuexUsername() {
+      return this.$store.state.username
+    },
+    alreadyLoggedIn() {
+      return !this.$store.state.logged
+    },
+  },
+  methods: {
+    logoutUser() {
+      try {
+        this.$store.commit('logout')
+        this.registrationSuccess = true
+      } catch (err) {
+        console.log(err)
+        this.registrationFailure = true
+      }
+    },
+    registerUser() {
+      if (this.$refs.form.validate()) {
+        // form accepted
+        try {
+          this.$store.commit(
+            'register',
+            this.username,
+            this.email,
+            this.password
+          )
+          this.$refs.form.reset()
+          this.registrationSuccess = true
+        } catch (err) {
+          console.log(err)
+          this.registrationFailure = true
+        }
+      } else {
+        // form denied
+        this.registrationFailure = true
+      }
+    },
   },
 }
 </script>
