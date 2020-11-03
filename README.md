@@ -24,6 +24,7 @@ Registration page implements basic input field validation rules.
 
 ![Drawing SS1](https://github.com/NandeeshG/PICTOR/blob/main/screenshots/ss_draw2.png?raw=true)
 ![Drawing SS2](https://github.com/NandeeshG/PICTOR/blob/main/screenshots/ss_draw.png?raw=true)
+![ColorExtraction SS](https://github.com/NandeeshG/PICTOR/blob/main/screenshots/ss_colorExtraction.png?raw=true)
 ![Registration SS](https://github.com/NandeeshG/PICTOR/blob/main/screenshots/ss_reg.png?raw=true)
 
 ## Build Setup
