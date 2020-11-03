@@ -2,30 +2,47 @@
 
 WORK IN PROGRESS
 
-A basic picture editor using fabric.js and nuxt.js
-1. Add Text, Shapes, Images
-2. Change fill colour and border Colours
-3. Adjust Transparency
+### A basic picture editor using fabric.js and nuxt.js
+1. Add Text, Shapes
+2. Upload Images
+3. Change fill colour and border Colours
+4. Adjust Transparency
+5. Save Drawings locally
 
-Also a image color extraction functionality.
+Also added an image color extraction functionality.
 
-Using default layouts and multiple pages for registration, new canvas and saved drawings.
-Registration page implements basic input field validation rules.
+### Using - 
+1. Nuxt.JS
+2. Fabric.JS
+3. Color-Thief
+
+Implemented by default layouts and multiple pages for registration, new canvas and saved drawings.
+
+<hr>
 
 ## Todos
 
-1. Add more controls like delete, send front back, polyline.
-2. Refine Vuetify element's functioning. Make sure to add all the elements mentioned in whatsapp thread.
-3. Add vuex store
-4. Add upload image in color extraction or use saved drawings
-5. Add localstorage for current canvas
-6. Add save drawing option
-7. Make registration/login functional
+- [x] Add vuex store
+- [x] Add localstorage for current canvas
+- [x] Add save drawing option
+- [x] Make registration/login functional
+- [ ] Add more controls like ~~delete~~, send front back, polyline.
+- [ ] Refine Vuetify element's functioning. Make sure to add all the elements mentioned in whatsapp thread.
+- [ ] Add upload image in color extraction or use saved drawings
+- [ ] Connect Registration to API and auth
+- [ ] do not lose logged in info on refresh
+<hr>
 
+## Some Screenshots
 ![Drawing SS1](https://github.com/NandeeshG/PICTOR/blob/main/screenshots/ss_draw2.png?raw=true)
+
 ![Drawing SS2](https://github.com/NandeeshG/PICTOR/blob/main/screenshots/ss_draw.png?raw=true)
+
 ![ColorExtraction SS](https://github.com/NandeeshG/PICTOR/blob/main/screenshots/ss_colorExtraction.png?raw=true)
+
 ![Registration SS](https://github.com/NandeeshG/PICTOR/blob/main/screenshots/ss_reg.png?raw=true)
+
+<hr>
 
 ## Build Setup
 
