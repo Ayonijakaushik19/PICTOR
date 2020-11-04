@@ -3,18 +3,23 @@
 WORK IN PROGRESS
 
 ### A basic picture editor using fabric.js and nuxt.js
+
 1. Add Text, Shapes
 2. Upload Images
 3. Change fill colour and border Colours
 4. Adjust Transparency
-5. Save Drawings locally
+5. Save Drawings in browser
+6. Free Drawing
+7. Download ability
 
 Also added an image color extraction functionality.
 
-### Using - 
+### Using -
+
 1. Nuxt.JS
 2. Fabric.JS
 3. Color-Thief
+4. Vuetify
 
 Implemented by default layouts and multiple pages for registration, new canvas and saved drawings.
 
@@ -26,7 +31,9 @@ Implemented by default layouts and multiple pages for registration, new canvas a
 - [x] Add localstorage for current canvas
 - [x] Add save drawing option
 - [x] Make registration/login functional
-- [ ] Add more controls like ~~delete~~, send front back, polyline.
+- [x] Add more controls like ~~delete~~, ~~send front back~~, ~~polyline~~.
+- [x] Add download ability
+- [ ] Allow changing width and color of polyline
 - [ ] Refine Vuetify element's functioning. Make sure to add all the elements mentioned in whatsapp thread.
 - [ ] Add upload image in color extraction or use saved drawings
 - [ ] Connect Registration to API and auth
@@ -34,6 +41,7 @@ Implemented by default layouts and multiple pages for registration, new canvas a
 <hr>
 
 ## Some Screenshots
+
 ![Drawing SS1](https://github.com/NandeeshG/PICTOR/blob/main/screenshots/ss_draw2.png?raw=true)
 
 ![Drawing SS2](https://github.com/NandeeshG/PICTOR/blob/main/screenshots/ss_draw.png?raw=true)
