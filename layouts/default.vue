@@ -57,11 +57,22 @@
 
       <v-footer absolute>
         <v-container>
-          <v-btn v-for="ic in f_ics" :key="ic" icon>
-            <v-icon>{{ ic }}</v-icon>
-          </v-btn>
+          <v-row justify="start">
+            <v-col cols="12">
+              <v-chip class="ma-n1"> Made by Nandeesh </v-chip>
+              <v-btn
+                v-for="(sm, id) in social"
+                :key="id"
+                icon
+                :href="sm.link"
+                target="_blank"
+                small
+              >
+                <v-icon>{{ sm.icon }}</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-container>
-        <v-chip class="ma-4"> PICTOR - {{ new Date().getFullYear() }} </v-chip>
       </v-footer>
     </v-navigation-drawer>
 
@@ -80,7 +91,13 @@ export default {
     return {
       alert_welcome: false,
       drawer: false,
-      f_ics: ['mdi-twitter', 'mdi-instagram', 'mdi-facebook', 'mdi-youtube'],
+      social: [
+        { icon: 'mdi-github', link: 'https://www.github.com/NandeeshG/PICTOR' },
+        {
+          icon: 'mdi-linkedin',
+          link: 'https://www.linkedin.com/in/nandeesh-gupta-05b43014a/',
+        },
+      ],
       cols_val: 12,
       sm_val: 6,
       md_val: 4,
