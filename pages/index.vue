@@ -112,6 +112,20 @@
               @click="objDeleted"
               ><v-icon>mdi-delete</v-icon></v-btn
             >
+            <v-btn
+              :disabled="selection.disableControls"
+              icon
+              light
+              @click="objSendBack"
+              ><v-icon>mdi-arrange-send-backward</v-icon></v-btn
+            >
+            <v-btn
+              :disabled="selection.disableControls"
+              icon
+              light
+              @click="objBringForward"
+              ><v-icon>mdi-arrange-bring-forward</v-icon></v-btn
+            >
           </v-row>
           <v-row>
             <v-col cols="6">
@@ -128,6 +142,29 @@
         </v-col>
       </v-row>
     </v-container>
+
+    <v-snackbar
+      v-model="successAlert"
+      timeout="1000"
+      bottom
+      left
+      rounded="r-xl"
+      color="blue"
+      transition="slide-x-transition"
+    >
+      Successful!
+    </v-snackbar>
+    <v-snackbar
+      v-model="failureAlert"
+      timeout="1000"
+      bottom
+      left
+      rounded="r-xl"
+      color="red"
+      transition="slide-x-transition"
+    >
+      FAILED : {{ failureMessage }}
+    </v-snackbar>
 
     <v-footer class="black" app height="60">
       <span class="text-sm-h5 mb-5"> ADD - </span>
@@ -186,6 +223,9 @@ export default {
       maxHeight: 480,
       justify: ['start', 'center', 'end', 'space-around', 'space-between'],
       canvas: undefined,
+      successAlert: false,
+      failureAlert: false,
+      failureMessage: '',
       shapes: [
         { text: 'Rectangle', callback: () => this.addShape('rectangle') },
         { text: 'Circle', callback: () => this.addShape('circle') },
@@ -238,6 +278,7 @@ export default {
     if (this.currentCanvas !== {}) {
       this.canvas.loadFromJSON(this.currentCanvas)
     }
+    this.canvas.set('preserveObjectStacking', true)
     this.canvas.on('mouse:move', () => {
       this.checkSomeObjectActive()
       this.saveCanvas()
@@ -336,7 +377,13 @@ export default {
     },
     saveThisCanvas() {
       this.saveCanvas()
-      this.$store.commit('savedCanvas', this.canvas.toJSON())
+      try {
+        this.$store.commit('savedCanvas', this.canvas.toJSON())
+        this.successAlert = true
+      } catch (err) {
+        this.failureAlert = true
+        this.failureMessage = err
+      }
     },
     clearThisCanvas() {
       this.canvas.clear()
@@ -346,6 +393,18 @@ export default {
         this.canvas.remove(obj)
       })
       this.canvas.discardActiveObject().renderAll()
+    },
+    objSendBack() {
+      this.canvas.getActiveObjects().forEach((obj) => {
+        this.canvas.sendBackwards(obj, true)
+        this.canvas.renderAll()
+      })
+    },
+    objBringForward() {
+      this.canvas.getActiveObjects().forEach((obj) => {
+        this.canvas.bringForward(obj, true)
+        this.canvas.renderAll()
+      })
     },
     objEdited() {
       const color = `rgb(${this.selection.colorR},${this.selection.colorG},${this.selection.colorB})`

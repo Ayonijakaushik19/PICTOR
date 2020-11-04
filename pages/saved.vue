@@ -22,7 +22,21 @@
                 style="border: 1px solid black"
                 class="ma-2"
               ></canvas>
-              <v-card-subtitle class="pb-0"> CURRENT DRAWING </v-card-subtitle>
+              <v-card-title class="mt-n2 pa-1 pl-3">
+                CURRENT DRAWING
+              </v-card-title>
+              <v-card-actions>
+                <v-btn
+                  color="indigo"
+                  text
+                  :href="downloadFile"
+                  :download="downloadName"
+                  target="_blank"
+                  @click="downloadCurrent()"
+                >
+                  Download as PNG
+                </v-btn>
+              </v-card-actions>
             </v-card>
           </v-col>
           <v-col v-for="(c, id) in savedCanvas" :key="id" cols="12" md="6">
@@ -34,12 +48,14 @@
                 style="border: 1px solid black"
                 class="ma-2"
               ></canvas>
-              <v-card-subtitle class="pb-0"> DRAWING {{ id }} </v-card-subtitle>
+              <v-card-title class="mt-n2 pa-1 pl-3">
+                DRAWING {{ id }}
+              </v-card-title>
               <v-card-actions>
-                <v-btn color="orange" text @click="editSaved(id)">
+                <v-btn color="indigo" text @click="editSaved(id)">
                   Edit this
                 </v-btn>
-                <v-btn color="orange" text @click="deleteSaved(id)">
+                <v-btn color="indigo" text @click="deleteSaved(id)">
                   Delete
                 </v-btn>
               </v-card-actions>
@@ -54,6 +70,7 @@
 <script>
 /* eslint-disable no-console */
 import { fabric } from 'fabric'
+// import { uuid } from 'vue-uuid'
 export default {
   data() {
     return {
@@ -66,6 +83,8 @@ export default {
       maxWidth: 640,
       maxHeight: 480,
       zoom: 0.5,
+      downloadFile: {},
+      downloadName: {},
     }
   },
   computed: {
@@ -80,6 +99,29 @@ export default {
     this.renderDrawings()
   },
   methods: {
+    async downloadCurrent() {
+      const image = await this.curr_cnvs.toDataURL({
+        format: 'png',
+        quality: 1,
+        multiplier: 1 / this.zoom,
+      })
+      this.downloadFile = image
+      const d = new Date()
+      this.downloadName =
+        'drawing_' +
+        d.getDate() +
+        '_' +
+        d.getMonth() +
+        '_' +
+        d.getFullYear() +
+        '_' +
+        d.getHours() +
+        '_' +
+        d.getMinutes() +
+        '_' +
+        d.getSeconds() +
+        '.png'
+    },
     editSaved(id) {
       this.$store.commit('currentCanvas', this.savedCanvas[id])
       this.$router.push('/')

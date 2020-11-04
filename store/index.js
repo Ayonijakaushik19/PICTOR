@@ -26,9 +26,11 @@ export const mutations = {
     state.currentCanvas = val
   },
   savedCanvas(state, val) {
+    if (state.logged === false) throw new Error('Not logged in')
     state.savedCanvas.push(val)
   },
   deleteSaved(state, id) {
+    if (state.logged === false) throw new Error('Not logged in')
     state.savedCanvas.splice(id, 1)
   },
 }
