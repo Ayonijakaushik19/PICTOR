@@ -197,6 +197,19 @@
         dense
       >
       </v-overflow-btn>
+      <v-btn
+        v-if="!canvasIsDrawingMode"
+        icon
+        dense
+        class="mb-5"
+        @click="freeDraw(true)"
+      >
+        <v-icon>mdi-brush</v-icon>
+      </v-btn>
+      <v-btn v-else icon dense class="mb-5" @click="freeDraw(false)">
+        <v-icon>mdi-stop-circle</v-icon>
+      </v-btn>
+
       <v-file-input
         v-model="userImage"
         accept="image/*"
@@ -226,6 +239,7 @@ export default {
       successAlert: false,
       failureAlert: false,
       failureMessage: '',
+      canvasIsDrawingMode: false,
       shapes: [
         { text: 'Rectangle', callback: () => this.addShape('rectangle') },
         { text: 'Circle', callback: () => this.addShape('circle') },
@@ -285,6 +299,10 @@ export default {
     })
   },
   methods: {
+    freeDraw(val) {
+      this.canvas.set('isDrawingMode', val)
+      this.canvasIsDrawingMode = val
+    },
     checkSomeObjectActive() {
       let ret = false
       if (this.canvas === undefined || this.canvas === {}) {
