@@ -2,7 +2,7 @@
   <v-app class="white">
     <v-container>
       <v-row justify="center">
-        <v-col cols="10">
+        <v-col cols="12" sm="12" md="10">
           <canvas
             id="canvas"
             :width="maxWidth"
@@ -10,7 +10,7 @@
             style="border: 1px solid black"
           ></canvas>
         </v-col>
-        <v-col cols="2">
+        <v-col cols="12" sm="12" md="2">
           <v-row>
             <v-slider
               v-model="selection.angle"
@@ -126,6 +126,16 @@
               @click="objBringForward"
               ><v-icon>mdi-arrange-bring-forward</v-icon></v-btn
             >
+            <v-btn
+              v-if="allowSelection"
+              icon
+              light
+              @click="selectionToggle(allowSelection)"
+              ><v-icon>mdi-lock</v-icon></v-btn
+            >
+            <v-btn v-else icon light @click="selectionToggle(allowSelection)"
+              ><v-icon>mdi-lock-off</v-icon></v-btn
+            >
           </v-row>
           <v-row>
             <v-col cols="6">
@@ -141,6 +151,53 @@
           </v-row>
         </v-col>
       </v-row>
+    </v-container>
+
+    <v-container>
+      <v-stepper id="stepper" v-model="e1">
+        <v-stepper-header>
+          <v-stepper-step v-for="s in 4" :key="s" :complete="e1 > s" :step="s">
+            Name of step {{ s }}
+            <v-divider></v-divider>
+          </v-stepper-step>
+        </v-stepper-header>
+
+        <v-stepper-items>
+          <v-stepper-content v-for="s in 4" :key="s" :step="s">
+            <v-row justify="center">
+              <v-col cols="6">
+                <v-card
+                  v-for="i in 5"
+                  :key="i"
+                  rounded="xl"
+                  class="ma-6"
+                  max-width="500"
+                  outlined
+                >
+                  <v-img
+                    src="https://picsum.photos/id/11/500/300"
+                    width="500"
+                    height="300"
+                  ></v-img>
+                  <v-card-title> Number {{ i }} </v-card-title>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-btn
+              color="primary"
+              @click="
+                e1 = (s % 4) + 1
+                $vuetify.goTo('#stepper')
+              "
+            >
+              Continue
+            </v-btn>
+
+            <v-btn text> Cancel </v-btn>
+          </v-stepper-content>
+        </v-stepper-items>
+      </v-stepper>
     </v-container>
 
     <v-snackbar
@@ -227,9 +284,34 @@
 <script>
 /* eslint-disable no-console */
 import { fabric } from 'fabric'
+/*
+;(function () {
+  const defaultOnTouchStartHandler = fabric.Canvas.prototype._onTouchStart
+  fabric.util.object.extend(fabric.Canvas.prototype, {
+    _onTouchStart(e) {
+      const target = this.findTarget(e)
+      // if allowTouchScrolling is enabled, no object was at the
+      // the touch position and we're not in drawing mode, then
+      // let the event skip the fabricjs canvas and do default
+      // behavior
+      if (this.allowTouchScrolling && !target && !this.isDrawingMode) {
+        // returning here should allow the event to propagate and be handled
+        // normally by the browser
+        console.log('returning to browser')
+        return
+      }
+
+      console.log('returning to canvas')
+      // otherwise call the default behavior
+      defaultOnTouchStartHandler.call(this, e)
+    },
+  })
+})()
+*/
 export default {
   data() {
     return {
+      e1: 1,
       userText: '',
       userImage: {},
       maxWidth: 640,
@@ -266,6 +348,7 @@ export default {
         },
       ],
       selectedColor: 'black',
+      allowSelection: true,
       selection: {
         angle: '',
         bWidth: '',
@@ -292,13 +375,28 @@ export default {
     if (this.currentCanvas !== {}) {
       this.canvas.loadFromJSON(this.currentCanvas)
     }
-    this.canvas.set('preserveObjectStacking', true)
-    this.canvas.on('mouse:move', () => {
+    this.canvas.set({
+      preserveObjectStacking: true,
+      allowTouchScrolling: true,
+    })
+    console.log(this.canvas)
+    this.canvas.on('mouse:up', () => {
+      this.checkSomeObjectActive()
+      this.saveCanvas()
+    })
+    this.canvas.on('mouse:down', () => {
       this.checkSomeObjectActive()
       this.saveCanvas()
     })
   },
   methods: {
+    selectionToggle(curr) {
+      this.allowSelection = !curr
+      this.canvas.getObjects().forEach((obj) => {
+        obj.set('selectable', this.allowSelection)
+      })
+      this.canvas.discardActiveObject().renderAll()
+    },
     freeDraw(val) {
       this.canvas.set('isDrawingMode', val)
       this.canvasIsDrawingMode = val
@@ -453,4 +551,14 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+/*#canvas {
+  touch-action: manipulation;
+}
+.upper-canvas {
+  touch-action: manipulation;
+}
+.lower-canvas {
+  touch-action: manipulation;
+}*/
+</style>
