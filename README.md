@@ -1,5 +1,7 @@
 # PICTOR - your picture editor
 
+Live at - https://affectionate-cori-b0023c.netlify.app/
+
 WORK IN PROGRESS
 
 ### A basic picture editor using fabric.js and nuxt.js
