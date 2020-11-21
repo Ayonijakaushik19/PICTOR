@@ -182,7 +182,7 @@
       </v-text-field>
       <v-overflow-btn
         :items="shapes"
-        label="Shape"
+        label="Add Shape"
         dense
         segmented
         class="ma-1"
