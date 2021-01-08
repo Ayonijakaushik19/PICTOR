@@ -1,6 +1,6 @@
 # PICTOR - your picture editor
 
-Live at - https://affectionate-cori-b0023c.netlify.app/
+Live at - https://pictortool.netlify.app/
 
 WORK IN PROGRESS
 
